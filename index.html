@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026 Christmas Lists</title>
+<style>
+:root{
+  --bg:#fbf6ee; --card:#ffffff; --ink:#2a1a1a; --muted:#7a5f5f; --line:#ecd9cf;
+  --red:#b3202a; --green:#1d5a3a; --gold:#c8963a; --ph:#f6ece4;
+  --hero1:#8f1620; --hero2:#b3202a; --hero-ink:#fff8ee; --tab-on-ink:#fff; --pill-on-ink:#fff;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14201a; --card:#1d2e25; --ink:#f7efe4; --muted:#b9a99a; --line:#34493d;
+    --red:#ff7a80; --green:#7fd1a0; --gold:#e8c06a; --ph:#26392f;
+    --hero1:#6e1119; --hero2:#951b25; --tab-on-ink:#10241c; --pill-on-ink:#10241c;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;position:relative;min-height:100vh}
+.snow{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.snow i{position:absolute;top:-24px;color:var(--gold);opacity:.55;font-style:normal;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){.snow{display:none}}
+.topbar,header,.tabs,main,footer{position:relative;z-index:1}
+.topbar{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:10px 12px;background:var(--card);border-bottom:1px solid var(--line)}
+.topbar a{color:var(--muted);text-decoration:none;font-weight:600;padding:6px 14px;border-radius:999px}
+.topbar a:hover{color:var(--ink)}
+.topbar a[aria-current="page"]{background:var(--red);color:var(--pill-on-ink)}
+header{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:var(--hero-ink);text-align:center;padding:44px 20px 40px;border-bottom:6px solid var(--gold)}
+header::after{content:"";position:absolute;left:0;right:0;bottom:-12px;height:6px;background:repeating-linear-gradient(135deg,var(--green) 0 14px,#fff8ee 14px 28px)}
+.lights{letter-spacing:.5em;font-size:1.1rem;margin-bottom:8px}
+h1{font:600 clamp(2rem,6vw,3.4rem)/1.1 Georgia,"Times New Roman",serif;margin:0 0 8px;letter-spacing:-.01em}
+header p{margin:0;opacity:.92}
+.tabs{max-width:1000px;margin:36px auto 0;padding:0 20px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.tabs button{font:inherit;font-weight:700;background:var(--card);border:2px solid var(--line);border-radius:999px;color:var(--muted);padding:10px 22px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--green);border-color:var(--green);color:var(--tab-on-ink)}
+.tabs button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+main{max-width:1000px;margin:0 auto;padding:36px 20px 64px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.item{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--red);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;box-shadow:0 2px 8px rgba(120,30,30,.08);transition:transform .15s}
+.item:nth-child(even){border-top-color:var(--green)}
+.item:hover{transform:translateY(-3px);border-color:var(--gold)}
+.pic{aspect-ratio:1/1;background:var(--ph);display:grid;place-items:center;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:contain;background:#fff}
+.pic span{color:var(--muted);font-size:.85rem;padding:12px;text-align:center}
+.meta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:2px}
+.name{font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.store{color:var(--muted);font-size:.85rem}
+.note{color:var(--red);font-size:.85rem;font-weight:600}
+.empty{text-align:center;color:var(--muted);padding:48px 16px;border:2px dashed var(--line);border-radius:12px;background:var(--card)}
+.empty b{display:block;font-size:2rem;margin-bottom:6px}
+.people{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.person{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--red);border-radius:14px;padding:28px 16px;text-align:center;text-decoration:none;color:inherit;box-shadow:0 2px 8px rgba(120,30,30,.08);transition:transform .15s}
+.person:nth-child(even){border-top-color:var(--green)}
+.person:hover{transform:translateY(-3px);border-color:var(--gold)}
+.person .em{font-size:2.6rem;display:block}
+.person .pn{font:600 1.5rem Georgia,serif;margin:6px 0 2px}
+.person .ct{color:var(--muted);font-size:.9rem}
+footer{text-align:center;padding:0 20px 40px;color:var(--muted)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<script>
+const azs = name => ({ name, store:"Amazon", url:"https://www.amazon.com/s?k="+encodeURIComponent(name.slice(0,100)) });
+const lush = name => ({ name, store:"Lush", url:"https://www.lush.com/us/en_us/search?q="+encodeURIComponent(name) });
+const amz = (asin, name) => ({ name, url:`https://www.amazon.com/dp/${asin}`, store:"Amazon", asin });
+const cacheGet = k => { try { return JSON.parse(localStorage.getItem("xmas26:"+k)); } catch(e){ return null; } };
+const cacheSet = (k,v) => { try { localStorage.setItem("xmas26:"+k, JSON.stringify(v)); } catch(e){} };
+const amazonImg = asin => `https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=${asin}&Format=_SL500_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1`;
+const clean = t => t.replace(/^Amazon\.com\s*:\s*/i,"");
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt) e.textContent = txt; return e; };
+
+async function preview(url){
+  const hit = cacheGet(url);
+  if (hit) return hit;
+  const r = await fetch("https://api.microlink.io/?url=" + encodeURIComponent(url));
+  const j = await r.json();
+  const out = { image: j.data && j.data.image && j.data.image.url, title: j.data && j.data.title };
+  if (out.image) cacheSet(url, out);
+  return out;
+}
+
+function card(it){
+  const a = el("a","item"); a.href = it.url; a.target = "_blank"; a.rel = "noopener";
+  a.innerHTML = '<div class="pic"><span>Loading image…</span></div><div class="meta"><div class="name"></div><div class="store"></div><div class="note" hidden></div></div>';
+  const pic = a.querySelector(".pic"), nm = a.querySelector(".name");
+  nm.textContent = it.name || "Amazon item";
+  a.querySelector(".store").textContent = it.store;
+  if (it.note){ const n = a.querySelector(".note"); n.textContent = it.note; n.hidden = false; }
+  let tried = false;
+  const show = src => {
+    const img = new Image();
+    img.alt = it.name || "Product image";
+    img.referrerPolicy = "no-referrer";
+    img.onload = () => { if (img.naturalWidth > 1) pic.replaceChildren(img); else fallback(); };
+    img.onerror = fallback;
+    img.src = src;
+  };
+  const fallback = async () => {
+    if (tried) { pic.innerHTML = "<span>Image unavailable. Tap to open the store page.</span>"; return; }
+    tried = true;
+    try {
+      const p = await preview(it.url);
+      if (!it.name && p.title) nm.textContent = clean(p.title);
+      if (p.image) return show(p.image);
+    } catch(e){}
+    fallback();
+  };
+  if (it.asin) {
+    show(amazonImg(it.asin));
+    if (!it.name) preview(it.url).then(p => { if (p.title) nm.textContent = clean(p.title); }).catch(()=>{});
+  } else fallback();
+  return a;
+}
+
+function grid(items){
+  if (!items.length){
+    const d = el("div","empty"); d.innerHTML = "<b>🎁</b>No gifts added yet."; return d;
+  }
+  const g = el("div","grid");
+  items.forEach(it => g.appendChild(card(it)));
+  return g;
+}
+
+const PEOPLE = [
+  {id:"ethan", name:"Ethan", em:"🎅"},
+  {id:"caylann", name:"Caylann", em:"🎁"},
+  {id:"grayson", name:"Grayson", em:"⛄"},
+  {id:"nora", name:"Nora", em:"🎄"}
+];
+const VANS = "https://www.vans.com/en-us/p/shoes/wides-5655/authentic-wide-shoe-VN0A4BHNW00?size=11.0+Men+=+12.5+Women";
+const TAG = "Tap any gift to open it in the store.";
+const PAGES = {
+  ethan: { title:"Ethan’s 2026 Christmas List", lists:[
+    { label:"🎅 Mom + Dad", items:[
+      { name:"Ray-Ban Clubmaster Classic Polarized RB3016", store:"Jomashop", url:"https://www.jomashop.com/ray-ban-sunglasses-rb3016-990-58-51.html" },
+      { name:"Vans Authentic Wide Shoe", store:"Vans", url:VANS, note:"Size 11 men’s / 12.5 women’s" },
+      amz("B0H8S8G9BM", "2 Pack Band for Google Fitbit Air"),
+      { name:"Microsoft Xbox Wireless Controller", store:"Target", url:"https://www.target.com/p/microsoft-xbox-wireless-controller/-/A-1012836769" },
+      { name:"Derrick Leather Card Case", store:"Fossil", url:"https://www.fossil.com/en-us/products/derrick-leather-card-case/ML4744001.html" }
+    ]},
+    { label:"🎁 Caylann", items:[
+      amz("B0H7RJYWJQ", "Nylon Sport Band Compatible with Google Fitbit Air, Replacement Loop Strap"),
+      amz("B0FD2K58MF", "Spigen for iPhone 17 Case, Clear White"),
+      { name:"Santino Shades", store:"Parker & Stone", url:"https://parkerandstone.com/products/santino-shades?variant=51102786453792" },
+      { name:"Consciot CB10 Countertop Smoothie Blender", store:"Amazon", url:"https://www.amazon.com/dp/B0GKFNYS5J", asin:"B0GKFNYS5J" },
+      { name:"Vans Authentic Wide Shoe", store:"Vans", url:VANS, note:"Size 11 men’s / 12.5 women’s" }
+    ]}
+  ]},
+  caylann: { title:"Caylann’s 2026 Christmas List", lists:[ { label:"Caylann", items:[
+      lush("Turmeric Latte Perfume (Presale, Limited Edition)"),
+      lush("Snow Fairy Body Spray"),
+      lush("Snow Fairy Body Spray (Lush Club Early Access)"),
+      lush("Angels On Bare Skin Cleanser"),
+      lush("Intergalactic Bath Bomb"),
+      lush("Butterball Bath Bomb"),
+      lush("Sex Bomb Bath Bomb"),
+      lush("Lemony Flutter Cuticle Butter"),
+      lush("Super Milk Body Spray"),
+      lush("Sticky Dates Body Spray"),
+      lush("Super Milk Conditioning Hair Primer"),
+      lush("Sticky Dates Shower Gel"),
+      lush("The Comforter Bubble Bar"),
+      lush("Tea Tree Water Toner Water"),
+      lush("Sweet Wild Orange Hand Cream"),
+      lush("Sticky Dates Body Scrub"),
+      lush("Sleepy Body Lotion"),
+      lush("Scrubee Body Scrub"),
+      lush("Honey I Washed The Kids Soap"),
+      lush("Crème De Menthe Mouthwash Tabs"),
+      lush("Brightside Bubble Bar"),
+      lush("Toby's Magic Cow Bath Bomb"),
+      lush("Super Milk Shampoo"),
+      lush("Super Milk Conditioner"),
+      lush("Sticky Dates Lip Scrub"),
+      lush("Sticky Dates Hair Primer"),
+      lush("Sticky Dates Body Lotion"),
+      lush("Sleepy Soap"),
+      lush("Revive Hair Moisturiser"),
+      lush("Lord of Misrule Solid Perfume"),
+      lush("Let The Good Times Roll Body Spray"),
+      lush("Karma Soap"),
+      lush("Karma Perfume"),
+      lush("Honey I Washed My Hair Shampoo Bar"),
+      lush("Chelsea Morning Perfume"),
+      lush("Celestial Moisturizer"),
+      lush("Big Shampoo"),
+      lush("Beauty Sleep Face and Body Mask"),
+      lush("Sticky Dates Gift"),
+      lush("Deep Sleep Bath Bomb"),
+      lush("Aromaco Deodorant"),
+      lush("Sweetest Thing Gift"),
+      lush("Luna's Butterfly Bath Bomb"),
+      lush("Sleepy Shower Gel"),
+      lush("Outback Mate Soap"),
+      lush("Turmeric Latte Massage Bar"),
+      lush("Sleepy Gift"),
+      lush("Sleepy Bubble Bar"),
+      lush("Mask of Magnaminty Face and Body Mask"),
+      lush("Dream Cream Body Lotion"),
+      lush("Deep Sleep Massage Bar"),
+      lush("Blue Skies and Fluffy White Clouds Bubble Bar"),
+      lush("The Bump Massage Bar"),
+      lush("Lush Club Subscription Box XL"),
+      lush("Lush Club Subscription Box"),
+      lush("Lush Club Subscription Shower Box"),
+      lush("Relax Gift"),
+      lush("Honey I Washed The Kids Gift")
+    ] } ] },
+  grayson: { title:"Grayson’s 2026 Christmas List", lists:[ { label:"Grayson", items:[
+      azs("Frog and Toad Book Set"),
+      azs("Little People COLLECTOR Beetlejuice, 4 Figure Set | Betelgeuse, Lydia Deetz, Barbara Maitland, Adam Maitland, Display Box, For Movie Fans & Collectors"),
+      azs("Kids Bookshelf and Toy Storage-Book Shelf for Kids Rooms, Toddler Bookshelf | Montessori Bookshelf, Baby Bookcase With 4 Sling Shelves & Fabric Toy Chest Toy Organizer for Playrooms, Bedrooms, Nursery"),
+      azs("Olakids Kids Dress Up Storage with Mirror, Wooden Costume Wardrobe Closet with LED Lights Rack Storage Shelves 3 Hooks for Bedroom (Natural)"),
+      azs("Tonies Minnie Mouse Clubhouse Audio Toy Figurine from Disney"),
+      azs("Tonies Mickey Mouse Clubhouse Audio Toy Figurine from Disney"),
+      azs("Tonies Spookley The Square Pumpkin Audio Toy Figurine"),
+      azs("Tonies Curious George Audio Toy Figurine"),
+      azs("Tonies Laurie Berkner Audio Toy Figurine"),
+      azs("Tonies Peppa Pig: Playdate with Peppa Tonieplay Game [Requires Toniebox 2 and Controller]"),
+      azs("Tonies Disney Pixar: Scene Searchers Tonieplay Game [Requires Toniebox 2 and Controller]"),
+      azs("Tonies The Quizzles: All About Animals Tonieplay Quiz Game [Requires Toniebox 2 & Controller]"),
+      azs("Banana Panda Observation Space Puzzle - Large 60-piece Floor Puzzle with Seek and Find Activity - includes Educational Poster with Facts about the Solar System, for kids ages 4 years and up , 26.5\" x 19\""),
+      azs("Puzzlove Animals of The World (60 Pcs) 4+ Floor Puzzle"),
+      azs("Banana Panda Wild Jumbo Puzzle Safari | 24-Piece Large Floor Puzzle for Kids Age 2+ | Educational Animal Puzzle with Elephants, Lions, Giraffes & More | Boosts Motor Skills & Imagination"),
+      azs("I Love Dinosaurs Puzzle 4+ Floor Puzzle"),
+      azs("I Love Dogs Puzzle 3+ Floor Puzzle"),
+      azs("TOOLF 12 Drawers Storage Cabinet with Wooden Top and Plastic Bins, White | Toy Shelf Storage Chest Cubby Organizer(13.1\"D x 45.8\"W x 20.59\"H), for Home, Office, Playroom, Classroom & Craft Room"),
+      azs("Little Tikes Story Dream Machine PAW Patrol Hero Collection, Storytime, Books, Audio Play Character, Gift and Toy for Toddlers and Kids Girls Boys Ages 3+ Years"),
+      azs("Little Tikes Story Dream Machine PAW Patrol Skye Collection, 3 Stories, Bonus Character, Projects Storytime for Kids, Audio Play, Fun Toy, Ages 3+ Years"),
+      azs("Little Tikes Story Dream Machine World of Eric Carle Swim, Climb, Crawl Collection, Storytime, Books, Audio Play Character, Gift and Toy for Toddlers and Kids Girls Boys Ages 3+ Years"),
+      azs("Little Tikes Story Dream Machine 3 Fairy Tale Story Collections, Ugly Duckling and More, Bonus Character. Projects Storytime for Kids, Audio Play, Fun Toy, Ages 3+ Years"),
+      azs("Little Tikes Story Dream Machine Oscar the Grouch & Friends Story Collection, Storytime Book Set, Books, Sesame Street, Audio Play Character, Learning Toy Gift Toddlers and Kids Ages 3+ Years"),
+      azs("Little Tikes Story Dream Machine Berenstain Bears Good Lessons Collection, Storytime, Books, Audio Character, Toy Gift for Toddlers, Kids Girls Boys Ages 3+"),
+      azs("Little Tikes Story Dream Machine Dr. Seuss Grinch Collection, Storytime, Books, Audio Play Character, Gift and Toy for Toddlers and Kids Girls Boys Ages 3+ Years"),
+      azs("Little Tikes Story Dream Machine Big Bird & Friends Story Collection, Storytime, Books, Sesame Street, Audio Play Character, Gift and Toy for Toddlers and Kids Girls Boys Ages 3+"),
+      azs("Little Tikes Story Dream Machine World of Eric Carle The Very Story Collection, Storytime Book Set, DreamWorks Animation, Audio Play Character, Learning Toy Gift Toddlers & Kids Ages 3+"),
+      azs("Fisher-Price Little People Toddler Toys Disney Encanto Figure Set, 7 Characters for Preschool Kids Ages 18+ Months"),
+      azs("Fisher-Price Little People Collector Marvel Spider-Man: Number 1"),
+      azs("Little People Collector Marvel Spider-Man: Issue 2 Set | Miles Morales, Scarlet Spider, Spider-Man 2099, Spider-Punk, Collectable Figures in Display Box, For Fans, JKR66"),
+      azs("Marvel Super Heroes Little Golden Book Library: 5-Book Boxed Set: Spider-Man, Hulk, Iron Man, Captain America, The Avengers"),
+      azs("75 Years of Little Golden Books: 1942-2017: A Commemorative Set of 12 Best-Loved Books"),
+      azs("Star Wars: I Am a...Little Golden Book Library -- 5 Little Golden Books: I Am a Pilot; I Am a Jedi; I Am a Sith; I Am a Droid; I Am a Princess"),
+      azs("Dr. Seuss's Beginner Book Boxed Set Collection: The Cat in the Hat; One Fish Two Fish Red Fish Blue Fish; Green Eggs and Ham; Hop on Pop; Fox in Socks"),
+      azs("Magic Xylophone (Bluey) (Little Golden Book)"),
+      azs("Bluey 5-Minute Stories: 6 Stories in 1 Book? Hooray!"),
+      azs("Peppa Pig Little Golden Book Boxed Set (Peppa Pig)"),
+      azs("A Roaring Adventure (Disney/Pixar Toy Story) (Little Golden Book)"),
+      azs("Toy Story 4 Little Golden Book (Disney/Pixar Toy Story 4)"),
+      azs("For the Fans! (KPop Demon Hunters): Official Storybook (Little Golden Book)"),
+      azs("Pixar Little Golden Book Library (Disney/Pixar): Coco, Up, Onward, Soul, Luca"),
+      azs("Toy Story 2 (Little Golden Book)"),
+      azs("Disney and Pixar Toy Story 5 Little Golden Book"),
+      azs("Zootopia Little Golden Book (Disney Zootopia)"),
+      azs("PAW Patrol Little Golden Book Boxed Set (PAW Patrol)"),
+      azs("The Star Wars Little Golden Book Library (Star Wars): The Phantom Menace; Attack of the Clones; Revenge of the Sith; A New Hope; The Empire Strikes Back; Return of the Jedi"),
+      azs("12 Beloved Disney Classic Little Golden Books (Boxed Set)"),
+      azs("Spider-Man Little Golden Book Library (Marvel): Spider-Man!; Trapped by the Green Goblin; The Big Freeze!; High Voltage!; Night of the Vulture!"),
+      azs("Tonies Magic Tree House Audiobook Set - 4 Pack"),
+      azs("Tonies Mater Audio Toy Figurine from Disney and Pixar's Cars 2"),
+      azs("Tonies Sam-I-Am Audio Play Character from Green Eggs and Ham by Dr. Seuss"),
+      azs("Tonies Peppa Pig Audio Toy Figurine from My First Album"),
+      azs("Little People COLLECTOR Scooby-Doo Set | Includes Fred, Daphne, Velma, Shaggy & Scooby, Display Package, For TV Show Fans & Collectors"),
+      azs("Little People Collector Kpop Demon Hunters: Saja Boys Special Edition Set for Movie Fans, 5 Figures in a Display Package"),
+      azs("Little People Collector Kpop Demon Hunters: HUNTR/X Special Edition Set for Movie Fans, 3 Figures in a Display Package"),
+      azs("Fisher-Price Little People Disney Pixar Toy Story Pretend Play Figure Set | Woody, Buzz, Bo Peep, Forky, Rex, Ducky & Bunny, Toddler Toys for Kids Ages 18+ Months (Amazon Exclusive)"),
+      azs("Little People Toy Story Toy for Babies The Toy Corner Toy Story 1 1/2+"),
+      azs("Fisher-Price Little People Disney Pixar Toy Story Ferris Wheel | Playset with Woody & Ducky Figures, Pretend Play for Toddlers & Kids Ages 18+ Months, Gift Idea (Amazon Exclusive)"),
+      azs("Fisher-Price Little People DISNEY Pixar Toy Story Bobbin’ Bullseye | Toy Horse with Action, Jessie Figure, Pretend Play, Toddlers & Kids Ages 18+ Months"),
+      azs("Fisher-Price Little People My Mario Adventure Playset Toddler Toy | 1 Mario Figure & 1 Accessory, Video Game Sounds & Music, Fine Motor Activities, Toddlers & Kids Ages 18+ Months"),
+      azs("Tonies The Elf on The Shelf Audio Toy Figurine"),
+      azs("Tonies Music Danny Go! Adventure Beats 2pk"),
+      azs("Tonies Animal World: Precious Pets Clever Set - 4 Pack"),
+      azs("Tonies Favorite Children's Songs: Halloween & Spooky Songs Audio Toy Figurine"),
+      azs("Tonies Peanuts: A Charlie Brown Christmas (Vince Guaraldi Trio) Audio Toy Figurine"),
+      azs("Tonies Holiday Mickey Mouse Audio Toy Figurine from Disney's Christmas Around The World"),
+      azs("Tonies Viva Audio Toy Figurine from Dreamwork's Trolls Band Together"),
+      azs("Tonies Kermit the Frog Audio Toy Figurine from Disney's The Muppets"),
+      azs("Tonies Sleepy Friends: Bedtime Stories Audio Toy Figurine featuring Sleepy Bear"),
+      azs("Tonies Blippi Audio Toy Figurine from Moonbug"),
+      azs("Tonies Remy Audio Toy Figurine from Disney and Pixar's Ratatouille"),
+      azs("Tonies Winnie The Pooh Audio Toy Figurine from Disney"),
+      azs("Tonies Judy Hopps Audio Toy Figurine from Disney's Zootopia & Zootopia 2"),
+      azs("Tonies Sorcerer Mickey Audio Toy Figurine from Disney's Fantasia"),
+      azs("Tonies Chicka Chicka Boom Boom and Other Stories Audio Toy Figurine [English/Spanish]"),
+      azs("Tonies Aladdin Audio Toy Figurine from Disney"),
+      azs("Tonies Cookie Monster Audio Toy Figurine from Sesame Street"),
+      azs("Tonies Jasmine Audio Toy Figurine from Disney's Aladdin"),
+      azs("Tonies Doggyland Bow Wizzle Audio Toy Figurine from Doggyland; for Toniebox"),
+      azs("Tonies Mercat Audio Toy Figurine from Gabby's Dollhouse"),
+      azs("Tonies The Cat in The Hat Audio Toy Figurine"),
+      azs("Tonies Sulley Audio Toy Figurine from Disney's Monsters Inc."),
+      azs("Tonies Mirabel Audio Toy Figurine from Disney's Encanto"),
+      azs("Tonies Hot Wheels Audio Toy Figurine"),
+      azs("Tonies Minions Audio Toy Figurine from Despicable Me"),
+      azs("Tonies Joy Audio Toy Figurine from Disney and Pixar's Inside Out & Inside Out 2"),
+      azs("Tonies Up Audio Toy Figure from Disney & Pixar"),
+      azs("Tonies Wild Kratts: Martin Audio Toy Figurine"),
+      azs("Tonies Wild Kratts: Chris Audio Toy Figurine")
+    ] } ] },
+  nora:    { title:"Nora’s 2026 Christmas List",    lists:[ { label:"Nora", items:[] } ] }
+};
+
+const snow = el("div","snow"); snow.setAttribute("aria-hidden","true");
+for (let i=0;i<22;i++){
+  const f = el("i","", i%3 ? "❄" : "✦");
+  f.style.left = Math.random()*100+"%";
+  f.style.fontSize = (10+Math.random()*14)+"px";
+  f.style.animationDuration = (9+Math.random()*12)+"s";
+  f.style.animationDelay = (-Math.random()*20)+"s";
+  snow.appendChild(f);
+}
+
+let current = (function(){ try { return location.hash.replace("#","") || "ethan"; } catch(e){ return "ethan"; } })();
+function go(id){
+  current = id;
+  try { history.replaceState(null,"", id ? "#"+id : location.pathname + location.search); } catch(e){}
+  render();
+}
+function render(){
+  const id = current;
+  const P = PAGES[id], home = !P;
+  document.body.replaceChildren(snow);
+  document.title = home ? "2026 Christmas Lists" : P.title;
+
+  const bar = el("nav","topbar"); bar.setAttribute("aria-label","Pages");
+  [{id:"",name:"🏠 Home"}, ...PEOPLE.map(p => ({id:p.id, name:p.em+" "+p.name}))].forEach(l => {
+    const a = el("a","",l.name); a.href = "#"+l.id; a.onclick = e => { e.preventDefault(); go(l.id); };
+    if (l.id === (home ? "" : id)) a.setAttribute("aria-current","page");
+    bar.appendChild(a);
+  });
+
+  const head = el("header");
+  head.innerHTML = '<div class="lights" aria-hidden="true">🎄 ✨ 🎁 ✨ 🎄</div>';
+  head.append(el("h1","", home ? "2026 Christmas Lists" : P.title), el("p","", home ? "Pick a name to see their list." : TAG));
+  const main = el("main");
+  document.body.append(bar, head);
+
+  if (home){
+    const w = el("div","people");
+    PEOPLE.forEach(p => {
+      const a = el("a","person"); a.href = "#"+p.id; a.onclick = e => { e.preventDefault(); go(p.id); };
+      a.append(el("span","em",p.em), el("div","pn",p.name), el("div","ct","View list →"));
+      w.appendChild(a);
+    });
+    main.appendChild(w); document.body.appendChild(main);
+  } else if (P.lists.length > 1){
+    const tabs = el("div","tabs"); tabs.setAttribute("role","tablist");
+    const panels = [];
+    P.lists.forEach((l,i) => {
+      const b = el("button","",l.label); b.setAttribute("role","tab"); b.setAttribute("aria-selected", i===0);
+      const pn = el("section"); pn.setAttribute("role","tabpanel"); pn.hidden = i!==0; pn.appendChild(grid(l.items));
+      b.onclick = () => [...tabs.children].forEach((x,j) => { x.setAttribute("aria-selected", j===i); panels[j].hidden = j!==i; });
+      tabs.appendChild(b); panels.push(pn); main.appendChild(pn);
+    });
+    document.body.append(tabs, main);
+  } else {
+    main.appendChild(grid(P.lists[0].items)); document.body.appendChild(main);
+  }
+  document.body.appendChild(el("footer","","Merry Christmas! 🎄"));
+  window.scrollTo(0,0);
+}
+addEventListener("hashchange", () => { try { current = location.hash.replace("#","") || current; } catch(e){} render(); });
+render();
+</script>
+</body>
+</html>
