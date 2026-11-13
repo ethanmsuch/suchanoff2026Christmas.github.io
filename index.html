@@ -66,6 +66,8 @@ footer{text-align:center;padding:0 20px 40px;color:var(--muted)}
 <script>
 const azs = name => ({ name, store:"Amazon", url:"https://www.amazon.com/s?k="+encodeURIComponent(name.slice(0,100)) });
 const lush = name => ({ name, store:"Lush", url:"https://www.lush.com/us/en_us/search?q="+encodeURIComponent(name) });
+const find = (name, store, base, q, note) => ({ name, store, url: base + encodeURIComponent(q), note });
+const AMZ = "https://www.amazon.com/s?k=";
 const amz = (asin, name) => ({ name, url:`https://www.amazon.com/dp/${asin}`, store:"Amazon", asin });
 const cacheGet = k => { try { return JSON.parse(localStorage.getItem("xmas26:"+k)); } catch(e){ return null; } };
 const cacheSet = (k,v) => { try { localStorage.setItem("xmas26:"+k, JSON.stringify(v)); } catch(e){} };
@@ -137,7 +139,7 @@ const PAGES = {
   ethan: { title:"Ethan’s 2026 Christmas List", lists:[
     { label:"🎅 Mom + Dad", items:[
       { name:"Ray-Ban Clubmaster Classic Polarized RB3016", store:"Jomashop", url:"https://www.jomashop.com/ray-ban-sunglasses-rb3016-990-58-51.html" },
-      { name:"Vans Authentic Wide Shoe", store:"Vans", url:VANS, note:"Size 11 men’s / 12.5 women’s" },
+      { name:"Vans Authentic Shoe", store:"Vans", url:"https://www.vans.com/en-us/p/shoes/icons/authentic-5310/authentic-shoe-VN000Z4PW00?size=11.0+Men+=+12.5+Women", note:"Size 11 men’s / 12.5 women’s" },
       amz("B0H8S8G9BM", "2 Pack Band for Google Fitbit Air"),
       { name:"Microsoft Xbox Wireless Controller", store:"Target", url:"https://www.target.com/p/microsoft-xbox-wireless-controller/-/A-1012836769" },
       { name:"Derrick Leather Card Case", store:"Fossil", url:"https://www.fossil.com/en-us/products/derrick-leather-card-case/ML4744001.html" }
@@ -147,10 +149,20 @@ const PAGES = {
       amz("B0FD2K58MF", "Spigen for iPhone 17 Case, Clear White"),
       { name:"Santino Shades", store:"Parker & Stone", url:"https://parkerandstone.com/products/santino-shades?variant=51102786453792" },
       { name:"Consciot CB10 Countertop Smoothie Blender", store:"Amazon", url:"https://www.amazon.com/dp/B0GKFNYS5J", asin:"B0GKFNYS5J" },
-      { name:"Vans Authentic Wide Shoe", store:"Vans", url:VANS, note:"Size 11 men’s / 12.5 women’s" }
+      { name:"Vans Authentic Shoe", store:"Vans", url:"https://www.vans.com/en-us/p/shoes/icons/authentic-5310/authentic-shoe-VN000Z4PW00?size=11.0+Men+=+12.5+Women", note:"Size 11 men’s / 12.5 women’s" }
     ]}
   ]},
   caylann: { title:"Caylann’s 2026 Christmas List", lists:[ { label:"Caylann", items:[
+      find("Robot Vacuum", "Amazon", AMZ, "robot vacuum", undefined),
+      { name:"Vans Authentic Wide Shoe", store:"Vans", url:"https://www.vans.com/en-us/p/shoes/wides-5655/authentic-wide-shoe-VN0A4BHNW00", note:"Size 8" },
+      find("Beautiful by Drew Barrymore (Walmart line)", "Walmart", "https://www.walmart.com/search?q=", "beautiful by drew barrymore green", "Anything in green"),
+      find("OttoCast", "Amazon", AMZ, "ottocast carplay adapter", undefined),
+      find("Long Fast Charging Cable for Phone", "Amazon", AMZ, "long fast charging cable phone 10ft", undefined),
+      find("Board Game Books", "Amazon", AMZ, "board game books", undefined),
+      find("Cracker Barrel Spice Rack", "Cracker Barrel", "https://shop.crackerbarrel.com/search?q=", "spice rack", "Instead of the Lennox one"),
+      find("Sourdough Starter Kit", "Amazon", AMZ, "sourdough starter kit", "Starter kit and/or bread maker"),
+      find("Bread Maker", "Amazon", AMZ, "bread maker machine", "Bread maker and/or starter kit"),
+      find("Manual Juicer", "Amazon", AMZ, "manual citrus juicer", undefined),
       lush("Turmeric Latte Perfume (Presale, Limited Edition)"),
       lush("Snow Fairy Body Spray"),
       lush("Snow Fairy Body Spray (Lush Club Early Access)"),
@@ -211,6 +223,13 @@ const PAGES = {
       lush("Honey I Washed The Kids Gift")
     ] } ] },
   grayson: { title:"Grayson’s 2026 Christmas List", lists:[ { label:"Grayson", items:[
+      find("Tin Can Phone", "Amazon", AMZ, "tin can phone toy", undefined),
+      find("The Beatles Vinyl Record", "Amazon", AMZ, "beatles vinyl record", "Vinyl, or similar classic rock"),
+      find("Elton John Vinyl Record", "Amazon", AMZ, "elton john vinyl record", "Vinyl, or similar classic rock"),
+      find("Steve Miller Band Vinyl Record", "Amazon", AMZ, "steve miller band vinyl record", "Vinyl, or similar classic rock"),
+      find("Toothbrush Timer", "Amazon", AMZ, "toddler toothbrush timer", undefined),
+      find("Toddler Knife Set (Kitchen Helper)", "Amazon", AMZ, "toddler knife set kitchen helper", undefined),
+      find("Wall Shelf for Tonies", "Amazon", AMZ, "wall shelf for tonies", undefined),
       azs("Frog and Toad Book Set"),
       azs("Little People COLLECTOR Beetlejuice, 4 Figure Set | Betelgeuse, Lydia Deetz, Barbara Maitland, Adam Maitland, Display Box, For Movie Fans & Collectors"),
       azs("Kids Bookshelf and Toy Storage-Book Shelf for Kids Rooms, Toddler Bookshelf | Montessori Bookshelf, Baby Bookcase With 4 Sling Shelves & Fabric Toy Chest Toy Organizer for Playrooms, Bedrooms, Nursery"),
@@ -301,7 +320,20 @@ const PAGES = {
       azs("Tonies Wild Kratts: Martin Audio Toy Figurine"),
       azs("Tonies Wild Kratts: Chris Audio Toy Figurine")
     ] } ] },
-  nora:    { title:"Nora’s 2026 Christmas List",    lists:[ { label:"Nora", items:[] } ] }
+  nora:    { title:"Nora’s 2026 Christmas List",    lists:[ { label:"Nora", items:[
+      find("Denman Brush Set", "Amazon", AMZ, "denman brush set", undefined),
+      find("Clear Hair Ties with Cutter", "Amazon", AMZ, "clear hair elastics with cutter", undefined),
+      find("Socks", "Amazon", AMZ, "toddler girl socks", undefined),
+      find("Toddler Vanity", "Amazon", AMZ, "toddler vanity set with mirror and stool", "To sit and do her hair"),
+      find("Bitty Baby Doll", "Amazon", AMZ, "bitty baby doll", undefined),
+      find("Bitty Baby High Chair", "Amazon", AMZ, "bitty baby high chair", undefined),
+      find("Bitty Baby Crib", "Amazon", AMZ, "bitty baby crib", undefined),
+      find("Bitty Baby Stroller", "Amazon", AMZ, "bitty baby stroller", undefined),
+      find("Bitty Baby Play Food", "Amazon", AMZ, "bitty baby play food accessories", undefined),
+      find("Silk Sheets for Her Bed", "Amazon", AMZ, "silk sheet set toddler bed", "Protects her hair"),
+      find("Toddler Kitchen Apron", "Amazon", AMZ, "toddler apron kitchen helper", "Nora-sized, for kitchen help"),
+      find("Miss Mouth’s Messy Eater Stain Remover", "Amazon", AMZ, "miss mouth's messy eater stain remover", undefined)
+    ] } ] }
 };
 
 const snow = el("div","snow"); snow.setAttribute("aria-hidden","true");
